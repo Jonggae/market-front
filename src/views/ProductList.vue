@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="redirectToProductAddPage">상품 추가</button>
+        <button v-if="isAdmin" @click="redirectToProductAddPage">상품 추가</button>
         <h1>상품 목록</h1>
         <ul>
             <li v-for="product in products" :key="product.id">
@@ -17,11 +17,14 @@ export default {
     name: 'ProductList',
     data() {
         return {
-            products: []
+            products: [],
+            isAdmin: false,
         };
     },
     created() {
         this.fetchProducts();
+        this.checkAdmin();
+
     },
     methods: {
         fetchProducts() {
@@ -34,7 +37,21 @@ export default {
         },
         redirectToProductAddPage() {
             this.$router.push('/add-Product');
-        }
+        },
+        checkAdmin() {
+            const token = localStorage.getItem('jwt');
+            if (token) {
+                fetch('/api/customer/my-info', {
+                    headers: {'Authorization': `Bearer ${token}`}
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.isAdmin = data.data.authorityDtoSet.some(auth => auth.authorityName === 'ROLE_ADMIN');
+                    })
+                    .catch(error => console.error('Error checking admin status:', error))
+            }
+        },
+
     }
 };
 </script>
