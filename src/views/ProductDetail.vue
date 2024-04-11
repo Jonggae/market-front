@@ -6,8 +6,8 @@
         <p><strong>가격:</strong> {{ product.price }}</p>
         <p><strong>재고:</strong> {{ product.stock }}</p>
 
-        <button @click="editProduct">수정</button>
-        <button @click="deleteProduct">삭제</button>
+        <button v-if="isAdmin" @click="editProduct">수정</button>
+        <button v-if="isAdmin" @click="deleteProduct">삭제</button>
     </div>
 </template>
 
@@ -17,11 +17,13 @@ export default {
         return {
             product: null,
             // 이 컴포넌트가 로드되었을 때의 상품 ID 값이 필요합니다. 이 값을 라우트 파라미터에서 가져올 수 있습니다.
-            productId: this.$route.params.id
+            productId: this.$route.params.id,
+            isAdmin:false,
         };
     },
     created() {
         this.fetchProductDetail();
+        this.checkAdmin();
     },
     methods: {
         fetchProductDetail() {
@@ -41,6 +43,19 @@ export default {
                     console.error(error);
                     // 에러 처리 로직을 추가합니다. 예: 사용자에게 메시지를 보여주거나 다른 페이지로 리디렉션 할 수 있습니다.
                 });
+        },
+        checkAdmin() {
+            const token = localStorage.getItem('jwt');
+            if (token) {
+                fetch('/api/customer/my-info', {
+                    headers: {'Authorization': `Bearer ${token}`}
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.isAdmin = data.data.authorityDtoSet.some(auth => auth.authorityName === 'ROLE_ADMIN');
+                    })
+                    .catch(error => console.error('Error checking admin status:', error))
+            }
         },
         editProduct() {
             // 상품 수정 페이지로 라우팅합니다.
