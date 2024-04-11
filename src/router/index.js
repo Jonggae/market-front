@@ -3,9 +3,9 @@ import HomePage from '@/views/HomePage.vue';
 import LoginPage from "@/views/LoginPage.vue";
 import MainPage from "@/views/MainPage.vue";
 import RegisterPage from "@/views/RegisterPage.vue";
-import UserProfile from "@/components/UserProfile.vue";
+import UserProfile from "@/views/UserProfile.vue";
 import ProductList from "@/views/ProductList.vue";
-import AddProduct from "@/components/AddProduct.vue";
+import AddProduct from "@/views/AddProduct.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import ProductEdit from "@/views/ProductEdit.vue";
 // LoginPage.vue, RegisterPage.vue, MainPage.vue 등 추가 컴포넌트를 여기에 임포트
