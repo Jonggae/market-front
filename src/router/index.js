@@ -8,6 +8,7 @@ import ProductList from "@/views/ProductList.vue";
 import AddProduct from "@/views/AddProduct.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import ProductEdit from "@/views/ProductEdit.vue";
+import CartPage from "@/views/CartPage.vue";
 // LoginPage.vue, RegisterPage.vue, MainPage.vue 등 추가 컴포넌트를 여기에 임포트
 
 const routes = [
@@ -22,8 +23,7 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: LoginPage
-    }
-    ,
+    },
     {
         path: '/main',
         name: 'Main',
@@ -74,6 +74,12 @@ const routes = [
         meta: { requiresAdmin: true } // 관리자 권한이 필요함을 명시
 
     },
+
+    {
+        path: '/cart',
+        name: 'CartPage',
+        component: CartPage,
+    }
 
     // 추가 라우트 설정
 ];
