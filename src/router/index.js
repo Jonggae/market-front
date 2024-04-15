@@ -9,6 +9,7 @@ import AddProduct from "@/views/AddProduct.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import ProductEdit from "@/views/ProductEdit.vue";
 import CartPage from "@/views/CartPage.vue";
+import OrderPage from "@/views/OrderPage.vue";
 // LoginPage.vue, RegisterPage.vue, MainPage.vue 등 추가 컴포넌트를 여기에 임포트
 
 const routes = [
@@ -79,6 +80,12 @@ const routes = [
         path: '/cart',
         name: 'CartPage',
         component: CartPage,
+    },
+
+    {
+        path: '/orders',
+        name: 'OrderPage',
+        component: OrderPage,
     }
 
     // 추가 라우트 설정

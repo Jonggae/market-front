@@ -27,7 +27,6 @@ export default {
     },
     methods: {
         login() {
-            // Basic 인증 대신 JWT 인증을 사용하는 경우, 이 부분을 수정하세요.
             const headers = new Headers({
                 'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
             });
