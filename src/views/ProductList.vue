@@ -8,6 +8,8 @@
                 <p class="product-price">가격 : {{ product.price }}원</p>
                 <router-link class="info-link" :to="`/products/${product.id}`">상품 정보</router-link>
                 <button class="add-to-cart-btn" @click="addToCart(product)">장바구니에 추가</button>
+                <button @click="addToOrder(product)">주문에 추가</button>
+
             </li>
         </ul>
     </div>
@@ -81,9 +83,29 @@ export default {
                 .catch(error => {
                     console.error('Error adding product to cart:', error);
                 });
+        },
+        addToOrder(product) {
+            const orderItem = {
+                productId: product.id,
+                quantity: 1
+            };
+            fetch(`/api/orders/my-order/items`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify(orderItem)
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('주문 추가 실패');
+                    alert('주문에 상품이 추가되었습니다.');
 
+                })
+                .catch(error => {
+                    console.error('Error adding item to order:', error);
+                });
         }
-
     }
 };
 </script>
