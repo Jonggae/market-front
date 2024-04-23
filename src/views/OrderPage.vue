@@ -5,7 +5,7 @@
             <div v-for="order in orders" :key="order.orderId" class="order-card">
                 <h3>주문 번호: {{ order.orderId }}</h3>
                 <p><strong>주문 날짜:</strong> {{ new Date(order.orderDateTime).toLocaleString() }}</p>
-                <p><strong>주문 상태:</strong> {{ order.status }}</p>
+                <p><strong>주문 상태:</strong> {{ getStatusText(order.status) }}</p>
                 <div class="order-details">
                     <table>
                         <thead>
@@ -21,8 +21,12 @@
                             <td>{{ item.productName }}</td>
                             <td>
                                 {{ item.quantity }}
-                                <button @click="increaseQuantity(order, item)">+</button>
-                                <button @click="decreaseQuantity(order, item)">-</button>
+                                <button v-if="order.status === 'PENDING_ORDER'" class="status-button"
+                                        @click="increaseQuantity(order, item)">+
+                                </button>
+                                <button v-if="order.status === 'PENDING_ORDER'" class="status-button"
+                                        @click="decreaseQuantity(order, item)">-
+                                </button>
                             </td>
                             <td>{{ item.price }}원</td>
                             <td>
@@ -32,7 +36,9 @@
                         </tbody>
                     </table>
                 </div>
-                <button class="status-button" @click="confirmOrder(order)">주문 하기</button>
+                <button v-if="order.status === 'PENDING_ORDER'" class="status-button" @click="confirmOrder(order)">주문
+                    하기
+                </button>
                 <button class="status-button" @click="deleteOrder(order.orderId, order.customerId)">주문 취소</button>
             </div>
         </div>
@@ -43,13 +49,27 @@
 export default {
     data() {
         return {
-            orders: []
+            orders: [
+                {orderId: 1, status: '{PENDING_PAYMENT}'}
+            ]
         };
     },
     created() {
         this.fetchOrders();
     },
     methods: {
+        getStatusText(status) {
+            const statusMap = {
+                PENDING_PAYMENT: '결제 대기',
+                PENDING_ORDER: '주문 대기', // 주문 대기
+                PAID: '결제 완료',
+                PREPARING_FOR_SHIPMENT: '배송 준비 중',
+                SHIPPED: '배송 중',
+                DELIVERED: '배송 완료',
+                CANCELLED: '주문 취소'
+            };
+            return statusMap[status] || status;
+        },
         fetchOrders() {
             fetch('/api/orders/my-order', {
                 headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
@@ -88,7 +108,7 @@ export default {
 
             fetch(`/api/orders/${customerId}/${orderId}`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}` }
+                headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
             })
                 .then(response => {
                     if (!response.ok) throw new Error('주문 취소 실패');

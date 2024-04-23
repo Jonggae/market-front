@@ -10,6 +10,7 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import ProductEdit from "@/views/ProductEdit.vue";
 import CartPage from "@/views/CartPage.vue";
 import OrderPage from "@/views/OrderPage.vue";
+import AdminOrders from "@/views/AdminOrders.vue";
 // LoginPage.vue, RegisterPage.vue, MainPage.vue 등 추가 컴포넌트를 여기에 임포트
 
 const routes = [
@@ -51,6 +52,12 @@ const routes = [
         name: 'ProductEdit',
         component: ProductEdit,
         meta: { requiresAdmin: true } // 관리자 권한이 필요함을 명시
+    },
+    {
+        path: '/admin/orders' ,
+        name: "AdminOrders",
+        component: AdminOrders,
+        meta: { requiresAdmin: true}
     },
 
     {

@@ -5,10 +5,11 @@
         <ul>
             <li v-for="product in products" :key="product.id" class="product-item">
                 <p class="product-title">no.{{ product.id }} : {{ product.productName }}</p>
-                <p class="product-price">가격 : {{ product.price }}원</p>
-                <router-link class="info-link" :to="`/products/${product.id}`">상품 정보</router-link>
+
+                <p class="product-price"> 가격 : {{ product.price }}원</p>
+                <p><router-link class="info-link" :to="`/products/${product.id}`">상품 정보</router-link></p>
                 <button class="add-to-cart-btn" @click="addToCart(product)">장바구니에 추가</button>
-                <button @click="addToOrder(product)">주문에 추가</button>
+                <button class="add-to-order-btn" @click="addToOrder(product)">주문에 추가</button>
 
             </li>
         </ul>
@@ -126,13 +127,14 @@ export default {
 }
 
 .info-link {
-    margin-right: 20px;
+
     text-decoration: none;
     color: #007bff;
 }
 
 .add-to-cart-btn {
     margin-left: 20px;
+    margin-right: 20px;
     padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
@@ -142,6 +144,18 @@ export default {
 }
 
 .add-to-cart-btn:hover {
+    background-color: #45a049;
+}
+
+.add-to-order-btn {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.add-to-order-btn:hover{
     background-color: #45a049;
 }
 
@@ -155,6 +169,7 @@ export default {
     cursor: pointer;
 }
 
+.
 .add-product-btn:hover {
     background-color: #0056b3;
 }
