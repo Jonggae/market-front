@@ -2,7 +2,7 @@
     <div v-if="user">
         <h1>회원 정보 페이지</h1>
         <p>환영합니다, {{ user.customerName }}!</p>
-        <p>당신의 권한: {{ user.authorities.join(', ') }}</p>
+        <p>당신의 권한: {{ displayAuthority }}</p>
         <p>이메일: {{ user.email }}</p>
         <p>전화번호: {{ user.phoneNumber }}</p>
         <button @click="logout">로그아웃</button>
@@ -17,8 +17,19 @@ export default {
     name: 'UserProfile',
     data() {
         return {
-            user: null
+            user: {
+                authorities: ['ROLE_USER', 'ROLE_ADMIN']
+            }
         };
+    },
+    computed: {
+        displayAuthority() {
+            const authorityMap = {
+                'ROLE_USER': '일반 사용자',
+                'ROLE_ADMIN': '관리자'
+            };
+            return this.user.authorities.map(auth => authorityMap[auth] || auth).join(', ');
+        }
     },
     created() {
         this.fetchUserData();
@@ -50,11 +61,13 @@ export default {
                     alert(error.message);
                     this.$router.replace('/login');
                 });
-        },
+        }
+        ,
         logout() {
             localStorage.removeItem('jwt');
             this.$router.push('/login');
         }
     }
-};
+}
+;
 </script>
