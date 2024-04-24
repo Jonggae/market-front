@@ -11,7 +11,7 @@
                 </div>
                 <div>
                     <label style="font-weight: bold">상태 변경 : </label>
-                    <select v-model="order.newStatus" >
+                    <select v-model="order.newStatus">
                         <option disabled value="">주문 상태 선택</option>
                         <option v-for="(name, code) in statusOptions" :key="code" :value="code">
                             {{ name }}
@@ -19,6 +19,10 @@
                     </select>
                 </div>
                 <button @click="updateOrderStatus(order)" style="margin-top: 5px">주문 상태 변경</button>
+                <p>
+                    <button @click="deleteOrder(order)">주문 삭제</button>
+                    <br>삭제는 주문 취소 상태인 주문만 삭제하세요.
+                </p>
 
                 <p>주문 날짜: {{ new Date(order.orderDateTime).toLocaleString() }}</p>
                 <ul>
@@ -88,6 +92,22 @@ export default {
                     this.fetchOrders(); // 주문 목록 다시 불러오기
                 })
                 .catch(error => console.error('Error updating order status:', error));
+        },
+        deleteOrder(order) {
+            fetch(`/api/orders/delete/${order.customerId}/${order.orderId}`, {
+                method: 'DELETE',
+                headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('주문 삭제 실패');
+                    alert('주문이 삭제되었습니다.');
+                    this.fetchOrders(); // 주문 목록 다시 불러오기
+                })
+                .catch(error => {
+                    console.error('Error deleting order:', error);
+                    alert('주문 삭제 중 오류가 발생했습니다: ' + error.message);
+                });
+
         }
     }
 }
