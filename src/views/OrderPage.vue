@@ -13,7 +13,7 @@
                             <th>상품 이름</th>
                             <th>수량</th>
                             <th>가격</th>
-                            <th>작업</th>
+                            <th >작업</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -30,7 +30,9 @@
                             </td>
                             <td>{{ item.price }}원</td>
                             <td>
-                                <button @click="removeOrderItem(order, item)">삭제</button>
+                                <button v-if="order.status === 'PENDING_ORDER'" @click="removeOrderItem(order, item)">
+                                    삭제
+                                </button>
                             </td>
                         </tr>
                         </tbody>
@@ -39,7 +41,9 @@
                 <button v-if="order.status === 'PENDING_ORDER'" class="status-button" @click="confirmOrder(order)">주문
                     하기
                 </button>
-                <button class="status-button" @click="deleteOrder(order.orderId, order.customerId)">주문 취소</button>
+                <button v-if="order.status!=='CANCELLED'" class="status-button"
+                        @click="cancelOrder(order.orderId, order.customerId)">주문 취소
+                </button>
             </div>
         </div>
     </div>
@@ -103,10 +107,10 @@ export default {
                     alert('주문 확정 과정에서 오류가 발생했습니다: ' + error.message);
                 });
         },
-        deleteOrder(orderId, customerId) {
+        cancelOrder(orderId, customerId) {
             if (!confirm('이 주문을 취소하시겠습니까?')) return;
 
-            fetch(`/api/orders/${customerId}/${orderId}`, {
+            fetch(`/api/orders/cancel/${customerId}/${orderId}`, {
                 method: 'DELETE',
                 headers: {'Authorization': `Bearer ${localStorage.getItem('jwt')}`}
             })
